@@ -8,7 +8,7 @@ namespace AoC25
         {
             int day = 1;
             int part = 1;
-            bool test = true;
+            bool test = false;
             int testNum = 0;    // Used only to allow multiple test files per day (e.g., _test1, _test2, etc.)
 
             string input = "./Input/day" + day.ToString("00");
