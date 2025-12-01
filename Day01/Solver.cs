@@ -2,7 +2,7 @@
 
 namespace AoC25.Day01
 {
-    public class Solver
+    internal class Solver
     {
         public static string Solve(List<string> input, int part)
             => part switch
