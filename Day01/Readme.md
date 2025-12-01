@@ -1,6 +1,9 @@
 ﻿# AoC25 - Day01
 __Note: This readme file has been auto-generated from code using an AI tool.__
 
+<p align="center">
+<img src="AoC25_day1.jpg" style="width:640px" alt="Day 1: Secret Entrance"/>
+</p>
 
 ## Problem summary
 We have a circular dial with 100 discrete positions numbered 0..99. The pointer starts at position 50. The puzzle input is a list of rotations, each given as a string with a direction letter (`L` or `R`) followed by a positive integer amount (for example `L37`, `R260`). Each rotation turns the pointer left (decreasing positions) or right (increasing positions) by the given amount; the dial wraps modulo 100.
