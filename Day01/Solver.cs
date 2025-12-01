@@ -33,7 +33,27 @@ namespace AoC25.Day01
 
         private static string SolvePart2(List<string> input)
         {
-            return "";
+            int pos = 50;
+            int times_it_points_to_Zero = 0;
+
+            foreach (var rotation in input)
+            {
+                var rotationDir = rotation[0];
+                var rotationAmount = int.Parse(rotation[1..]);
+
+                var distance_to_Zero = pos == 0 ? 100
+                                                : rotationDir == 'L' ? pos : (100 - pos);
+                
+                int fullTurns = rotationAmount / 100;
+                int remainingRotation = rotationAmount % 100;
+
+                times_it_points_to_Zero += fullTurns;
+                times_it_points_to_Zero += (remainingRotation >= distance_to_Zero) ? 1 : 0;
+
+                pos = pos + (rotationDir == 'L' ? (-1 * rotationAmount) : rotationAmount);
+                pos = MathHelper.Modulo(pos, 100);
+            }
+            return times_it_points_to_Zero.ToString();
         }
     }
 }
