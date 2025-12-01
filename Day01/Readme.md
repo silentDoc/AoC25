@@ -1,5 +1,5 @@
 ﻿# AoC25 - Day01
-__Note: This readme file has been auto-generated from code using an AI tool.__
+_Note: This readme file has been auto-generated from code using an AI tool._
 
 <p align="center">
 <img src="AoC25_day1.jpg" style="width:640px" alt="Day 1: Secret Entrance"/>
