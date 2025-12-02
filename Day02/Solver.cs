@@ -1,14 +1,18 @@
-﻿namespace AoC25.Day02
+﻿using AoC25.Common;
+
+namespace AoC25.Day02
 {
     internal class Solver
     {
         public static string Solve(List<string> input, int part)
-            => part switch
-            {
-                1 => SolvePart1(input),
-                2 => SolvePart2(input),
-                _ => "Wrong part number - only 1 or 2 allowed"
-            };
+        {
+            long sum = 0;
+            foreach (var (first, second) in ParsePairs(input))
+                for (long i = first; i <= second; i++)
+                    if (part == 1 ? HasRepeats(i) : HasRepeatsPart2(i))
+                        sum += i;
+            return sum.ToString();
+        }
 
         private static IEnumerable<(long, long)> ParsePairs(List<string> input)
         {
@@ -26,17 +30,21 @@
             return str.Length % 2 == 0 && str[..(str.Length / 2)] == str[(str.Length / 2)..];
         }
 
-        private static string SolvePart1(List<string> input)
-        { 
-            long sum = 0;
-            foreach (var (first, second) in ParsePairs(input))
-                for (long i = first; i <= second; i++)
-                    if(HasRepeats(i))
-                        sum += i;
-            return sum.ToString();
-        }
+        private static bool HasRepeatsPart2(long number)
+        {
+            string str = number.ToString();
+            for (int i = 1; i <= str.Length / 2; i++)
+            {
+                if(str.Length % i != 0)
+                    continue;
+                var parts = str.Windowed(i,i).Select(x => new string(x)).ToList();
+                if(parts.Any(x => x.Length!=parts.First().Length))
+                    continue;
+                if (parts.Distinct().Count()==1)
+                    return true;
 
-        private static string SolvePart2(List<string> input)
-            => "Not implemented";
+            }
+            return false;
+        }
     }
 }
