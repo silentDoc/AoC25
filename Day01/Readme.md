@@ -1,5 +1,5 @@
 ﻿# AoC25 - Day01
-_Note: This readme file has been auto-generated from code using an AI tool._
+_Note: this README was generated from the implementation in `Day01/Solver.cs`._
 
 <p align="center">
 <img src="AoC25_day1.jpg" style="width:640px" alt="Day 1: Secret Entrance"/>
@@ -20,24 +20,23 @@ You must count how many times the pointer lands (or passes) on position 0 accord
 ## How the solution works
 
 Common setup:
-- Start position: pos = 50.
-- Use a positive modulo helper to keep pos in range 0..99:
-  - Modulo implemented as `(a % b + b) % b` to avoid negative results.
+- Start position: `pos = 50`.
+- Use a positive modulo helper to keep `pos` in range 0..99:
+  - `MathHelper.Modulo(int a, int b)` implements `(a % b + b) % b` to avoid negative results.
 
-Part 1 (SolvePart1):
+Part 1 (check after each rotation):
 - For each rotation:
   - Parse `rotationDir` = first character (`'L'` or `'R'`).
   - Parse `rotationAmount` = integer part after the first character.
-  - Update position: pos += (rotationDir == 'L' ? -rotationAmount : rotationAmount).
-  - Wrap with modulo 100.
-  - If pos == 0 after the update, increment the counter.
+  - Update position: `pos += (rotationDir == 'L' ? -rotationAmount : rotationAmount)`.
+  - Wrap with `MathHelper.Modulo(pos, 100)`.
+  - If `pos == 0` after the update, increment the counter.
 - Complexity: O(n) where n is the number of rotations.
 
-Part 2 (SolvePart2):
-- The key difference: a single rotation may pass position 0 multiple times.
+Part 2 (count passes through zero during a rotation):
 - For each rotation:
   - Compute `distance_to_Zero` as the number of steps from the current position to reach 0 in the rotation direction:
-    - If pos == 0, treat `distance_to_Zero` as 100 (a full turn needed to come back to 0).
+    - If `pos == 0`, treat `distance_to_Zero` as 100 (a full turn needed to come back to 0).
     - If rotating left (decreasing indices), `distance_to_Zero = pos`.
     - If rotating right (increasing indices), `distance_to_Zero = 100 - pos`.
   - Decompose the rotation amount into:
@@ -45,26 +44,37 @@ Part 2 (SolvePart2):
     - `remainingRotation = rotationAmount % 100` — the leftover steps after full turns.
   - Increment the counter by `fullTurns`.
   - If `remainingRotation >= distance_to_Zero`, the leftover steps will reach or pass 0 once more, so increment the counter by 1.
-  - Finally, update `pos` by adding/subtracting `rotationAmount` and wrap with modulo 100.
+  - Finally, update `pos` by adding/subtracting `rotationAmount` and wrap with `MathHelper.Modulo(pos, 100)`.
 - This correctly counts every pass or landing on 0 that occurs during each rotation.
 
 ## Examples
-- Starting pos = 50, rotation `R60`:
-  - distance_to_Zero = 100 - 50 = 50
-  - fullTurns = 60 / 100 = 0
-  - remainingRotation = 60
-  - remainingRotation >= distance_to_Zero → counts 1 crossing
-  - New pos = (50 + 60) % 100 = 10
+- Starting `pos = 50`, rotation `R60`:
+  - `distance_to_Zero = 100 - 50 = 50`
+  - `fullTurns = 60 / 100 = 0`
+  - `remainingRotation = 60`
+  - `remainingRotation >= distance_to_Zero` → counts 1 crossing
+  - New pos = `(50 + 60) % 100 = 10`
 
-- Rotation `L150` from pos = 10:
-  - distance_to_Zero = pos = 10 (because rotating left)
-  - fullTurns = 150 / 100 = 1 → counts 1 crossing
-  - remainingRotation = 50
-  - remainingRotation >= distance_to_Zero (50 >= 10) → counts 1 more
+- Rotation `L150` from `pos = 10`:
+  - `distance_to_Zero = pos = 10` (because rotating left)
+  - `fullTurns = 150 / 100 = 1` → counts 1 crossing
+  - `remainingRotation = 50`
+  - `remainingRotation >= distance_to_Zero` (50 >= 10) → counts 1 more
   - Total 2 crossings for that rotation
-  - New pos = (10 - 150) mod 100 = (10 - 150 + 100*2) % 100 = 60
+  - New pos = `(10 - 150) mod 100 = (10 - 150 + 100*2) % 100 = 60`
 
 ## Implementation notes
-- The code uses a small utility `MathHelper.Modulo(int a, int b)` to produce a non-negative modulo result.
+- The code uses the small utility `MathHelper.Modulo(int a, int b)` to produce a non-negative modulo result.
 - Input parsing assumes valid lines beginning with `L` or `R` followed by a non-negative integer.
-- Both solutions are linear in the number of rotations and use constant extra memory.
+- Both solutions run in linear time over the number of rotations and use constant extra memory.
+
+## Refactor notes (from `Day01/Solver.cs`)
+The implementation was refactored for clarity and to remove duplication without changing behavior:
+
+- Unified public entry point: `Solve(List<string>, int)` uses a switch expression to delegate to a single internal `Solution` method that implements both parts.
+- Compact parsing: direction and amount are extracted using deconstruction:
+  - `var (rotationDir, rotationAmount) = (rotation[0], int.Parse(rotation[1..]));`
+- Position update and normalization are grouped and performed with `MathHelper.Modulo(pos, 100)`.
+- `distance_to_Zero` is calculated centrally and the `pos == 0` case is treated as 100 to account for full turns.
+- Part 2 counting uses `fullTurns = rotationAmount / 100` and `remainingRotation = rotationAmount % 100`; `fullTurns` are added and one more is added if `remainingRotation >= distance_to_Zero`.
+- Result: more compact and readable code with identical external behavior.

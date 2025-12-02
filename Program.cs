@@ -6,9 +6,9 @@ namespace AoC25
     {
         static void Main(string[] args)
         {
-            int day = 2;
+            int day = 1;
             int part = 1;
-            bool test = !false;
+            bool test = false;
             int testNum = 0;    // Used only to allow multiple test files per day (e.g., _test1, _test2, etc.)
 
             string input = "./Input/day" + day.ToString("00");
