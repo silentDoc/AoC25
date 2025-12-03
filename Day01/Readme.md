@@ -5,6 +5,8 @@ _Note: this README was generated from the implementation in `Day01/Solver.cs`._
 <img src="AoC25_day1.jpg" style="width:640px" alt="Day 1: Secret Entrance"/>
 </p>
 
+**Image prompt:** _"Generate an image of an elf trying to open a secret entrance in the north pole with a numeric rotation dial in a christmas environment. The style of the image looks like a Pixar movie"_
+
 ## Problem summary
 We have a circular dial with 100 discrete positions numbered 0..99. The pointer starts at position 50. The puzzle input is a list of rotations, each given as a string with a direction letter (`L` or `R`) followed by a positive integer amount (for example `L37`, `R260`). Each rotation turns the pointer left (decreasing positions) or right (increasing positions) by the given amount; the dial wraps modulo 100.
 

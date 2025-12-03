@@ -4,6 +4,8 @@
 <img src="AoC25_day2.jpg" style="width:640px" alt="Day 2: Gift Shop"/>
 </p>
 
+**Image Prompt:** _"Generate an image of an elf in a gift shop in the north pole, in a christmas environment. There has to be a sign with the text "Thank you for visiting the North Pole!" and an extensive gift selection, as well as a clerk with a computer."_
+
 ## Problem summary (English)
 Given a single-line input that contains one or more comma-separated inclusive ranges (for example `100-999,1000-1999`), iterate every integer inside each range and sum those integers that satisfy a repetition property.
 
