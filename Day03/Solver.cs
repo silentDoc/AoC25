@@ -3,14 +3,9 @@
     internal class Solver
     {
         public static string Solve(List<string> input, int part)
-            => part switch
-            {
-                1 => Solution(input, 1),
-                2 => Solution(input, 2),
-                _ => "Wrong part number - only 1 or 2 allowed"
-            };
+            => ParseBank(input).Sum(x => MaxJoltage(x, (part == 1) ? 2 : 12)).ToString();
 
-        static public IEnumerable<List<int>> GetBank(List<string> input)
+        static public IEnumerable<List<int>> ParseBank(List<string> input)
         {
             foreach (var line in input)
             {
@@ -19,16 +14,24 @@
             }
         }
 
-        private static string Solution(List<string> input, int part)
+        private static (int selected, List<int> remainingList) SelectMax(List<int> bank, int numDigit)
         {
-            int result = 0;
-            foreach (var bank in GetBank(input))
+            var selected = bank.Take(bank.Count - numDigit).Max();
+            var remainingList = bank.Skip(bank.IndexOf(selected) + 1).ToList();
+            return (selected, remainingList);
+        }
+
+        private static long MaxJoltage(List<int> bank, int numDigits)
+        {
+            long result = 0;
+            List<int> remainingBank = bank;
+            for (int i= numDigits-1; i >= 0; i--)
             {
-                var first = bank.Take(bank.Count - 1).Max();
-                var second = bank.Skip(bank.IndexOf(first) + 1).Max();
-                result += first*10 + second;
+                var (digit, rest) = SelectMax(remainingBank, i);
+                remainingBank = rest;
+                result = result * 10 + digit;
             }
-            return result.ToString();
+            return result;
         }
     }
 }

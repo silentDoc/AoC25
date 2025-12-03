@@ -7,7 +7,7 @@ namespace AoC25
         static void Main(string[] args)
         {
             int day = 3;
-            int part = 1;
+            int part = 2;
             bool test = false;
             int testNum = 0;    // Used only to allow multiple test files per day (e.g., _test1, _test2, etc.)
 
