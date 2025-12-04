@@ -9,7 +9,7 @@ namespace AoC25.Day04
         public static string Solve(List<string> input, int part)
         { 
             ParseGrid(input);
-            return part == 1 ? SolvePart1(input) : SolvePart2(input);
+            return part == 1 ? GetRemovable().Count.ToString() : SolvePart2(input);
         }
 
         private static void ParseGrid(List<string> input)
@@ -20,28 +20,18 @@ namespace AoC25.Day04
                     grid[new Coord2D(col, row)] = ch;
         }
 
-        private static string SolvePart1(List<string> input)
-        {
-            var sum = 0;
-            foreach(var key in grid.Keys.Where(x => grid[x]=='@'))
-                sum += key.GetNeighbors8().Where(n => grid.ContainsKey(n)).Count(x => grid[x] == '@') < 4 ? 1 : 0;
-            return sum.ToString();
-        }
+        private static List<Coord2D> GetRemovable()
+            => grid.Keys.Where(x => grid[x] == '@')
+                        .Where(key => key.GetNeighbors8().Where(n => grid.ContainsKey(n)).Count(x => grid[x] == '@') < 4)
+                        .ToList();
 
         private static string SolvePart2(List<string> input)
         {
             List<Coord2D> toRemove = new();
-            bool someRemoved = true;
             int removed = 0;
-
-            while (someRemoved)
+            while ((toRemove = GetRemovable()).Any())
             {
-                foreach (var key in grid.Keys.Where(x => grid[x] == '@'))
-                    if (key.GetNeighbors8().Where(n => grid.ContainsKey(n)).Count(x => grid[x] == '@') < 4)
-                        toRemove.Add(key);
-                
                 removed += toRemove.Count;
-                someRemoved = toRemove.Count > 0;
                 toRemove.ForEach(x => grid[x] = '.');
                 toRemove.Clear();
             }
