@@ -2,7 +2,7 @@
 _Note: this README was generated from the implementation in `Day04/Solver.cs`._
 
 <p align="center">
-<img src="AoC25_day4.jpg" style="width:640px" alt="Day 4: Printing Department"/>
+<img src="AoC25_Day4.jpg" style="width:640px" alt="Day 4: Printing Department"/>
 </p>
 
 **Image Prompt:** _Please generate an image that depicts the following description: "A north pole secret base printing department. The people there are clearly getting ready for Christmas; they have lots of large rolls of paper everywhere, and there's even a massive printer in the corner (to handle the really big print jobs)." The style of the picture must be like Pixar movies._
