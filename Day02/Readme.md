@@ -1,4 +1,5 @@
 ﻿# AoC25 - Day02
+_Note: this README was generated from the implementation in `Day02/Solver.cs`._
 
 <p align="center">
 <img src="AoC25_day2.jpg" style="width:640px" alt="Day 2: Gift Shop"/>

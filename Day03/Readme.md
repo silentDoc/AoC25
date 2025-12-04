@@ -1,4 +1,5 @@
 ﻿# AoC25 - Day03
+_Note: this README was generated from the implementation in `Day03/Solver.cs`._
 
 <p align="center">
 <img src="AoC25_day3.jpg" style="width:640px" alt="Day 3: Lobby"/>
