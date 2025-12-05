@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AoC25.Day05
+﻿namespace AoC25.Day05
 {
     record IdRange
     {
