@@ -1,4 +1,6 @@
-﻿namespace AoC25.Day05
+﻿using System;
+
+namespace AoC25.Day05
 {
     record IdRange
     {
@@ -76,16 +78,17 @@
                 var newMergedRanges = new List<IdRange>();
                 mergedRanges.ForEach(newMergedRanges.Add);
 
-                foreach (var range in mergedRanges)
+                for (int i = 0; i < mergedRanges.Count-1; i++)
                 {
-                    foreach (var other in mergedRanges)
+                    var range = mergedRanges[i];
+                    for (int j = i+1; j < mergedRanges.Count; j++)
                     {
-                        // Bear in mind that Equals only checks for Low and High being equal, allowing duplicate ranges to exist in the list
-                        if (range != other && range.Intersects(other))
+                        var other = mergedRanges[j];
+                        if (range.Intersects(other))
                         {
                             var merged = range.Merge(other);
-                            newMergedRanges.Remove(range);
-                            newMergedRanges.Remove(other);
+                            newMergedRanges.RemoveAt(j);
+                            newMergedRanges.RemoveAt(i);
                             newMergedRanges.Add(merged);
                             mergedAny = true;
                             break;
@@ -93,11 +96,11 @@
                     }
                     if (mergedAny)
                         break;
+
                 }
                 mergedRanges = newMergedRanges;
             }
-            // Distinct is necessary to remove duplicates, record equality check only low = low and high = high
-            ranges = mergedRanges.Distinct().ToList();  
+            ranges = mergedRanges;  
         }
 
         private static string SolvePart2()
