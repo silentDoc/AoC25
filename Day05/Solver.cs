@@ -9,10 +9,12 @@
             => num >= Low && num <= High;
 
         public bool Contains(IdRange other)
-            => other.Low >= Low && other.High <= High;
+            => (other.Low >= Low && other.High <= High) ||
+               (Low >= other.Low && High <= other.High);
 
         public bool Overlaps(IdRange other)
-            => other.High >= Low && other.Low <= High;
+            => (other.High >= Low && other.Low <= High) ||
+               (High >= other.Low && Low <= other.High);
 
         public bool Intersects(IdRange other)
             => Contains(other) || Overlaps(other);
@@ -78,6 +80,7 @@
                 {
                     foreach (var other in mergedRanges)
                     {
+                        // Bear in mind that Equals only checks for Low and High being equal, allowing duplicate ranges to exist in the list
                         if (range != other && range.Intersects(other))
                         {
                             var merged = range.Merge(other);
@@ -93,7 +96,8 @@
                 }
                 mergedRanges = newMergedRanges;
             }
-            ranges = mergedRanges.Distinct().ToList();
+            // Distinct is necessary to remove duplicates, record equality check only low = low and high = high
+            ranges = mergedRanges.Distinct().ToList();  
         }
 
         private static string SolvePart2()
