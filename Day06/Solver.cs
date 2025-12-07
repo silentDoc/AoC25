@@ -1,15 +1,21 @@
-﻿namespace AoC25.Day06
+﻿using System.Linq;
+
+namespace AoC25.Day06
 {
     internal class Solver
     {
         static List<List<long>> rows = new();
+        static List<List<long>> nums = new();
         static List<char> ops = new();
-
 
         public static string Solve(List<string> lines, int part = 1)
         {
-            ParseInput(lines);
-            return part == 1 ? SolvePart1() : SolvePart2();
+            if (part == 1)
+                ParseInput(lines);
+            else
+                ParseInputRightMost(lines);
+
+            return Calculate(part);
         }
 
         static void ParseInput(List<string> lines)
@@ -19,16 +25,39 @@
             ops = lines[^1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(x => x[0]).ToList();
         }
 
-        static string SolvePart1()
+        static void ParseInputRightMost(List<string> lines)
         {
-            var els = Enumerable.Range(0, ops.Count).ToList();
-            List<long> results = els.Select(col => ops[col] == '+' ? rows.Sum(row => row[col])
-                                                                   : rows.Aggregate(1, (long acc, List<long> row) => acc * row[col]))
-                                    .ToList();
-            return results.Sum().ToString();
+            List<long> group = new();
+            var linesNums = lines[..^1];
+            
+            for (int i = linesNums[0].Length - 1; i >= 0; i--)
+            {
+                string num = string.Join("", linesNums.Select(x => x[i]).ToArray());
+                num = num.Replace(" ", "");
+
+                if(num.Length>0)
+                    group.Add(long.Parse(num));
+
+                if ((num.Length == 0) || (i == 0))
+                {
+                    nums.Add(group);
+                    group = new();
+                }
+            }
+            ops = lines[^1].Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(x => x[0]).ToList();
         }
 
-        static string SolvePart2()
-            => "Part 2 solution";
+        static string Calculate(int part)
+        {
+            var els = Enumerable.Range(0, ops.Count).ToList();
+            List<long> results = part == 1 ? els.Select(col => ops[col] == '+' ? rows.Sum(row => row[col])
+                                                                               : rows.Aggregate(1, (long acc, List<long> row) => acc * row[col]))
+                                                 .ToList()
+                                           : els.Select(col => ops[col] == '+' ? nums[ops.Count - col-1].Sum()
+                                                                               : nums[ops.Count - col - 1].Aggregate(1, (long acc, long val) => acc * val))
+                                                 .ToList();
+
+            return results.Sum().ToString();
+        }
     }
 }
