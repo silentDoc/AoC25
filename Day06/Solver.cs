@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace AoC25.Day06
+﻿namespace AoC25.Day06
 {
     internal class Solver
     {
