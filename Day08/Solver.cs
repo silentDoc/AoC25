@@ -18,7 +18,7 @@ namespace AoC25.Day08
         public static string Solve(List<string> lines, int part = 1)
         {
             ParseInput(lines);
-            return part == 1 ? SolvePart1Alt() : SolvePart2();
+            return part == 1 ? SolvePart1() : SolvePart2();
         }
            
         private static void ParseInput(List<string> lines)
@@ -47,7 +47,7 @@ namespace AoC25.Day08
                 BoxInCircuit[i] = i;
         }
 
-        private static string SolvePart1Alt()
+        private static string SolvePart1()
         {
             for (int i = 0; i < 1000; i++)
             {
