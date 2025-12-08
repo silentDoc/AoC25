@@ -14,12 +14,11 @@ namespace AoC25.Day08
         static List<Coord3DL> BoxPositions = new();
         static List<PairInfo> Pairs = new();
         static Dictionary<int, int> BoxInCircuit = new();
-        static Dictionary<(int, int), double> Distances = new();
 
         public static string Solve(List<string> lines, int part = 1)
         {
             ParseInput(lines);
-            return part == 1 ? SolvePart1() : SolvePart2();
+            return part == 1 ? SolvePart1Alt() : SolvePart2();
         }
            
         private static void ParseInput(List<string> lines)
@@ -32,17 +31,12 @@ namespace AoC25.Day08
 
             for (int i = 0; i < BoxPositions.Count - 1; i++)
                 for (int j = i + 1; j < BoxPositions.Count; j++)
-                {
                     Pairs.Add(new PairInfo
                     {
                         Item1 = i,
                         Item2 = j,
                         Distance = BoxPositions[i].DistanceTo(BoxPositions[j])
                     });
-
-                    Distances[(i, j)] = BoxPositions[i].DistanceTo(BoxPositions[j]);
-                    Distances[(j, i)] = Distances[(i, j)];
-                }
             
             // Lookup list to find closest pairs faster
             // Sort pairs by distance, faster to find closest pairs using "First" later
@@ -53,32 +47,25 @@ namespace AoC25.Day08
                 BoxInCircuit[i] = i;
         }
 
-        private static string SolvePart1()
+        private static string SolvePart1Alt()
         {
             for (int i = 0; i < 1000; i++)
             {
-                var minDist = Distances.Values.Min();
-                var closestPair = Distances.Keys.Where(k => Distances[k] == minDist).First();
+                var pair = Pairs[i];
 
-                // We find 2 boxes in different circuits - we need to merge circuits
-                if (BoxInCircuit[closestPair.Item1] != BoxInCircuit[closestPair.Item2])
+                if (BoxInCircuit[pair.Item1] != BoxInCircuit[pair.Item2])
                 {
-
-                    var secondCircuitId = BoxInCircuit[closestPair.Item2];
+                    var secondCircuitId = BoxInCircuit[pair.Item2];
                     var boxesOfSecond = BoxInCircuit.Keys.Where(x => BoxInCircuit[x] == secondCircuitId);
                     foreach (var ind in boxesOfSecond)
-                        BoxInCircuit[ind] = BoxInCircuit[closestPair.Item1];
+                        BoxInCircuit[ind] = BoxInCircuit[pair.Item1];
                 }
-                Distances.Remove(closestPair);
-                Distances.Remove((closestPair.Item2, closestPair.Item1));
             }
-
             return BoxInCircuit.GroupBy(x => x.Value)
                                .Select(g => g.Count())
                                .OrderByDescending(x => x).Take(3)
                                .Aggregate(1, (acc, val) => acc * val)
                                .ToString();
-
         }
 
         private static string SolvePart2()
