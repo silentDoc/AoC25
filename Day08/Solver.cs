@@ -6,11 +6,12 @@ namespace AoC25.Day08
     {
         static List<Coord3DL> BoxPositions = new();
         static Dictionary<(int, int), double> Distances = new();
+        static Dictionary<int, int> BoxInCircuit = new();
 
         public static string Solve(List<string> lines, int part = 1)
         {
             ParseInput(lines);
-            return part == 1 ? SolvePart1(lines) : SolvePart2(lines);
+            return part == 1 ? SolvePart1Alt() : SolvePart2(lines);
         }
            
         private static void ParseInput(List<string> lines)
@@ -27,42 +28,37 @@ namespace AoC25.Day08
                     Distances[(i,j)] = BoxPositions[i].DistanceTo(BoxPositions[j]);
                     Distances[(j,i)] = Distances[(i, j)];
                 }
-        }
-       
-        private static string SolvePart1(List<string> lines)
-        {
-            HashSet<HashSet<int>> Circuits = new();
 
+            for (int i = 0; i < BoxPositions.Count; i++)
+                BoxInCircuit[i] = i;
+        }
+
+        private static string SolvePart1Alt()
+        {
             for (int i = 0; i < 1000; i++)
             {
                 var minDist = Distances.Values.Min();
                 var closestPair = Distances.Keys.Where(k => Distances[k] == minDist).First();
-                
-                var circuitContainsFirst = Circuits.Where(c => c.Contains(closestPair.Item1)).FirstOrDefault();
-                var circuitContainsSecond = Circuits.Where(c => c.Contains(closestPair.Item2)).FirstOrDefault();
 
-                if(circuitContainsFirst is null && circuitContainsSecond is null)
-                    Circuits.Add(new HashSet<int> { closestPair.Item1, closestPair.Item2 });
-                else if (circuitContainsFirst is not null && circuitContainsSecond is null)
-                    circuitContainsFirst.Add(closestPair.Item2);
-                else if (circuitContainsFirst is null && circuitContainsSecond is not null)
-                    circuitContainsSecond.Add(closestPair.Item1);
-                else if (circuitContainsFirst != circuitContainsSecond)
-                { 
-                    var both = circuitContainsFirst.Union(circuitContainsSecond);
-                    Circuits.Remove(circuitContainsSecond);
-                    Circuits.Remove(circuitContainsFirst);
-                    Circuits.Add(new HashSet<int>(both));
+                // We find 2 boxes in different circuits - we need to merge circuits
+                if (BoxInCircuit[closestPair.Item1] != BoxInCircuit[closestPair.Item2])
+                {
+                    
+                    var secondCircuitId = BoxInCircuit[closestPair.Item2];
+                    var boxesOfSecond = BoxInCircuit.Keys.Where(x => BoxInCircuit[x] == secondCircuitId);
+                    foreach(var ind in boxesOfSecond)
+                        BoxInCircuit[ind] = BoxInCircuit[closestPair.Item1];
                 }
-
                 Distances.Remove(closestPair);
                 Distances.Remove((closestPair.Item2, closestPair.Item1));
             }
 
-            return Circuits.Select(c => c.Count)
-                           .OrderByDescending(x => x).Take(3)
-                           .Aggregate( 1, (acc, val) => acc * val)
-                           .ToString();
+            return BoxInCircuit.GroupBy(x => x.Value)
+                               .Select(g => g.Count())
+                               .OrderByDescending(x => x).Take(3)
+                               .Aggregate(1, (acc, val) => acc * val)
+                               .ToString(); 
+
         }
 
         private static string SolvePart2(List<string> lines)
