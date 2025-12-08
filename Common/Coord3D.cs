@@ -94,6 +94,9 @@
         public int Manhattan(Coord3D other)
             => Math.Abs(x - other.x) + Math.Abs(y - other.y) + Math.Abs(z - other.z);
 
+        public double DistanceTo(Coord3D other)
+           => Math.Sqrt( ((x - other.x)* (x - other.x)) + ((y - other.y)* (y - other.y)) + ((z - other.z)* (z - other.z)));
+
         public double VectorModule
             => Math.Sqrt(x * x + y * y + z * z);
 
