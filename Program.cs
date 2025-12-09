@@ -6,7 +6,7 @@ namespace AoC25
     {
         static void Main(string[] args)
         {
-            int day = 8;
+            int day = 9;
             int part = 1;
             bool test = false;
             int testNum = 0;    // Used only to allow multiple test files per day (e.g., _test1, _test2, etc.)
@@ -29,6 +29,7 @@ namespace AoC25
                 6 => Day06.Solver.Solve(inputLines, part),
                 7 => Day07.Solver.Solve(inputLines, part),
                 8 => Day08.Solver.Solve(inputLines, part),
+                9 => Day09.Solver.Solve(inputLines, part),
                 _ => throw new ArgumentException("Wrong day number - unimplemented")
             };
             st.Stop();
